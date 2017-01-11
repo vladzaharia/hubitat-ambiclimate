@@ -25,12 +25,20 @@ metadata {
 
 	tiles {
 		// TODO: define your main and details tiles here
+        valueTile("temperature","device.temperature", width: 2, height: 2) {
+        	state "temperature", label: '${currentValue}'
+        }
 	}
 }
 
-// parse events into attributes
-def parse(String description) {
-	log.debug "Parsing '${description}'"
-	// TODO: handle 'temperature' attribute
+def poll() {
+    results = parent.getDeviceState()
+    generateEvent(results)
+}
 
+def generateEvent(Map results) {
+  	results.each { name, value ->
+    	sendEvent(name: name, value: value)
+  	}
+ 	return null
 }
