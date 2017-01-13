@@ -134,6 +134,8 @@ def updateDevices() {
         }
         stDevice.sendEvent(name: "temperature", value: Math.round(ambi.sensors["temperature"].data[0].value*100)/100)
         stDevice.sendEvent(name: "humidity", value: Math.round(ambi.sensors["humidity"].data[0].value*100)/100)
+        log.debug(ambi.appliances[0].appliance_state.data[0].power)
+        stDevice.sendEvent(name: "switch", value: (ambi.appliances[0].appliance_state.data[0].power == "Off") ? "off" : "on")
     }
     
     // Determine if there child device which don't reflect selections and delete
