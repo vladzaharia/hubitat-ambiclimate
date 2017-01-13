@@ -29,34 +29,9 @@ metadata {
 			tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
 				attributeState("temp", label:'${currentValue}°', unit:"dC", defaultState: true)
 			}
-/*
-			tileAttribute("device.temperature", key: "VALUE_CONTROL") {
-				attributeState("VALUE_UP", action: "tempUp")
-				attributeState("VALUE_DOWN", action: "tempDown")
-			}
-*/
 			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
 				attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
 			}
-/*
-			tileAttribute("device.thermostatOperatingState", key: "OPERATING_STATE") {
-				attributeState("idle", backgroundColor:"#44b621")
-				attributeState("heating", backgroundColor:"#ffa81e")
-				attributeState("cooling", backgroundColor:"#269bd2")
-			}
-			tileAttribute("device.thermostatMode", key: "THERMOSTAT_MODE") {
-				attributeState("off", label:'${name}')
-				attributeState("heat", label:'${name}')
-				attributeState("cool", label:'${name}')
-				attributeState("auto", label:'${name}')
-			}
-			tileAttribute("device.heatingSetpoint", key: "HEATING_SETPOINT") {
-				attributeState("heatingSetpoint", label:'${currentValue}', unit:"dC", defaultState: true)
-			}
-			tileAttribute("device.coolingSetpoint", key: "COOLING_SETPOINT") {
-				attributeState("coolingSetpoint", label:'${currentValue}', unit:"dC", defaultState: true)
-			}
-*/
 		}
 	}
 }
