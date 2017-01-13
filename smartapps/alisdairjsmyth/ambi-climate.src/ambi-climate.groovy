@@ -17,7 +17,6 @@ definition(
 {
 	appSetting "email"
     appSetting "password"
-	appSetting "bearerToken"
 }
 
 preferences {
