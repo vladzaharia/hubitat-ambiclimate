@@ -30,7 +30,7 @@ private deviceDiscovery() {
 
     return dynamicPage(name:"deviceDiscovery", title:"Device Selection", nextPage:"", refreshInterval: refreshInterval, install:true, uninstall: true) {
         section("Select Ambi Climate devices to add...") {
-            input "selectedDevices", "enum", required:true, title:"Blinds (${count} found)", multiple:true, options:options
+            input "selectedDevices", "enum", required:true, title:"Devices (${count} found)", multiple:true, options:options
         }
     }
 }
@@ -38,7 +38,7 @@ private deviceDiscovery() {
 Map deviceOptions() {
 	def options = [:]
     def devices = getDevices()
-    devices.data.devices.each { device ->
+    devices.each { device ->
     	options[device.mac] = device.room_name
     }
     log.debug("Options: ${options}")
@@ -75,23 +75,22 @@ def getDevices() {
         path: "/User",
         query: [
         	expand: "appliance%2Cdevice",
-            user_id: resp.data.user_id
+            user_id: response.data.user_id
         ],
         headers: [
-        	Authorization: "Bearer ${resp.data.token_id}"
+        	Authorization: "Bearer ${response.data.token_id}"
         ]
     ]
     
     try {
     	httpGet(params) { resp ->
         	log.debug("Retrieve List Response: ${resp.data}")
-            return resp
+            state.devices = resp.data.devices
+            return resp.data.devices
         }
     } catch (groovyx.net.http.HttpResponseException e) {
 		throw e
     }
-    
-
 }
 
 def installed() {
@@ -107,18 +106,45 @@ def updated() {
 def initialize() {
 	// TODO: subscribe to attributes, devices, locations, etc.
     updateDevices()
+    runEvery5Minutes('refresh')
 }
 
 def uninstalled() {
 	// Delete Existing Child Device
-
+    unschedule('refresh')
+    getChildDevices().each {
+    	log.info("Deleting ${it.deviceNetworkId}")
+        deleteChildDevice(it.deviceNetworkId)
+    }
 }
 
 def updateDevices() {
-	if (!state.devices) {
-    	state.devices = [:]
-    }
     def selectors = []
-    
 
+	// For each selected device, see if it exists as a child device and create if necessary
+	settings.selectedDevices.each { device ->
+    	selectors.add("${device}")
+        def stDevice = getChildDevice(device)
+        def ambi = state.devices.find { it.mac == device };
+        log.debug(ambi)
+        if (!stDevice) {
+        	log.debug("New device to be created: ${device}")
+            stDevice = addChildDevice(app.namespace, "Ambi Climate", device, null, ["label": ambi.room_name])
+        } else {
+        	log.debug("Device already exists: ${device}")
+        }
+        stDevice.sendEvent(name: "temperature", value: ambi.sensors["temperature"].data[0].value)
+        stDevice.sendEvent(name: "humidity", value: ambi.sensors["humidity"].data[0].value)
+    }
+    
+    // Determine if there child device which don't reflect selections and delete
+    getChildDevices().findAll { !selectors.contains("${it.deviceNetworkId}") }.each {
+    	log.info("Deleting ${it.deviceNetworkId}")
+        deleteChildDevice(it.deviceNetworkId)
+    }
+}
+
+def refresh() {
+	def devices = getDevices()
+    updateDevices()
 }
