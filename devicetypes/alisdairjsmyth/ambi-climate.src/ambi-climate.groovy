@@ -16,6 +16,7 @@
 metadata {
 	definition (name: "Ambi Climate", namespace: "alisdairjsmyth", author: "Alisdair Smyth") {
 		capability "Temperature Measurement"
+        capability "Relative Humidity Measurement"
 	}
 
 
@@ -23,11 +24,40 @@ metadata {
 		// TODO: define status and reply messages here
 	}
 
-	tiles {
-		// TODO: define your main and details tiles here
-        valueTile("temperature","device.temperature", width: 2, height: 2) {
-        	state "temperature", label: '${currentValue}'
-        }
+	tiles(scale: 2) {
+    	multiAttributeTile(name:"thermostatFull", type:"thermostat", width:6, height:4) {
+			tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
+				attributeState("temp", label:'${currentValue}°', unit:"dC", defaultState: true)
+			}
+/*
+			tileAttribute("device.temperature", key: "VALUE_CONTROL") {
+				attributeState("VALUE_UP", action: "tempUp")
+				attributeState("VALUE_DOWN", action: "tempDown")
+			}
+*/
+			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
+				attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
+			}
+/*
+			tileAttribute("device.thermostatOperatingState", key: "OPERATING_STATE") {
+				attributeState("idle", backgroundColor:"#44b621")
+				attributeState("heating", backgroundColor:"#ffa81e")
+				attributeState("cooling", backgroundColor:"#269bd2")
+			}
+			tileAttribute("device.thermostatMode", key: "THERMOSTAT_MODE") {
+				attributeState("off", label:'${name}')
+				attributeState("heat", label:'${name}')
+				attributeState("cool", label:'${name}')
+				attributeState("auto", label:'${name}')
+			}
+			tileAttribute("device.heatingSetpoint", key: "HEATING_SETPOINT") {
+				attributeState("heatingSetpoint", label:'${currentValue}', unit:"dC", defaultState: true)
+			}
+			tileAttribute("device.coolingSetpoint", key: "COOLING_SETPOINT") {
+				attributeState("coolingSetpoint", label:'${currentValue}', unit:"dC", defaultState: true)
+			}
+*/
+		}
 	}
 }
 
