@@ -4,6 +4,7 @@ SmartThings integration for Ambi Climate
 ## SmartThings Installation
 This integration capability is implemented as a combination of SmartApp and Device Handler. It is installed through the [SmartThings IDE](http://graph.api.smartthings.com/).
 * Log into the SmartThings IDE using your SmartThings account credentials
+
 ### SmartApp
 * Goto "My SmartApps"
 * Click on Settings and add the respository with Owner "alisdairjsmyth" and name of "smartthings-ambiclimate" and branch of master and then click save
@@ -12,6 +13,7 @@ This integration capability is implemented as a combination of SmartApp and Devi
 * Click on the SmartApp in the list and then click "App Settings"
 * Scoll down to the Settings and enter your Ambi Climate account credentials in the settings "email" and "password"
 * Press "Update" button
+
 ### Device Handler
 * Goto "My Device Handlers"
 * Click on Settings and add the respository with Owner "alisdairjsmyth" and name of "smartthings-ambiclimate" and branch of master and then click save
