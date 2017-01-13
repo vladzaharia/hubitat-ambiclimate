@@ -17,6 +17,10 @@ metadata {
 	definition (name: "Ambi Climate", namespace: "alisdairjsmyth", author: "Alisdair Smyth") {
 		capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
+        capability "Switch"
+        
+        command off
+        command on
 	}
 
 
@@ -32,6 +36,10 @@ metadata {
 			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
 				attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
 			}
+            tileAttribute("device.switch", key: "OPERATING_STATE") {
+		        attributeState("off", backgroundColor:"#ffffff")
+        		attributeState("on", backgroundColor:"#79b821")
+            }
 		}
 	}
 }
@@ -46,4 +54,10 @@ def generateEvent(Map results) {
     	sendEvent(name: name, value: value)
   	}
  	return null
+}
+
+def off() {
+}
+
+def on() {
 }
