@@ -23,7 +23,7 @@ preferences {
 private loginToAmbi() {
 	def showUninstall = email != null && password != null
 	return dynamicPage(name: "loginToAmbi", title: "Login to Ambi", nextPage:"deviceDiscovery", uninstall:showUninstall) {
-		section("Log in to your Tesla account:") {
+		section("Log in to your Ambi Climate account to continue") {
 			input "email", "text", title: "Email", required: true, autoCorrect:false
 			input "password", "password", title: "Password", required: true, autoCorrect:false
 		}
@@ -35,7 +35,7 @@ private deviceDiscovery() {
     def count   = options.size()
 
     return dynamicPage(name:"deviceDiscovery", title:"Device Selection", nextPage:"", refreshInterval: refreshInterval, install:true, uninstall: true) {
-        section("Select Ambi Climate devices to add...") {
+        section("Select Ambi Climate devices to add") {
             input "selectedDevices", "enum", required:true, title:"Devices (${count} found)", multiple:true, options:options
         }
     }
@@ -135,7 +135,7 @@ def updateDevices() {
         log.debug(ambi)
         if (!stDevice) {
         	log.debug("New device to be created: ${device}")
-            stDevice = addChildDevice(app.namespace, "Ambi Climate", device, null, ["label": ambi.room_name])
+            stDevice = addChildDevice("vladzaharia", "Ambi Climate", device, null, ["label": ambi.room_name])
         } else {
         	log.debug("Device already exists: ${device}")
         }
