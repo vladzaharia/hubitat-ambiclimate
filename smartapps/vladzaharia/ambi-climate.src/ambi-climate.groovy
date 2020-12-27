@@ -6,21 +6,28 @@
  */
 definition(
     name: "Ambi Climate",
-    namespace: "alisdairjsmyth",
-    author: "Alisdair Smyth",
-    description: "SmartApp supporting control of Ambi Climate devices within SmartThings",
-    category: "SmartThings Labs",
+    namespace: "vladzaharia",
+    author: "Vlad Zaharia",
+    description: "SmartApp supporting control of Ambi Climate devices within Hubitat",
+    category: "Control",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
     iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
     singleInstance: false)
-{
-	appSetting "email"
-    appSetting "password"
-}
 
 preferences {
+    page(name:"loginToAmbi", title:"Login to Ambi", content:"loginToAmbi")
     page(name:"deviceDiscovery", title:"Device Selection", content:"deviceDiscovery")
+}
+
+private loginToAmbi() {
+	def showUninstall = email != null && password != null
+	return dynamicPage(name: "loginToAmbi", title: "Login to Ambi", nextPage:"deviceDiscovery", uninstall:showUninstall) {
+		section("Log in to your Tesla account:") {
+			input "email", "text", title: "Email", required: true, autoCorrect:false
+			input "password", "password", title: "Password", required: true, autoCorrect:false
+		}
+	}
 }
 
 private deviceDiscovery() {
@@ -38,7 +45,7 @@ Map deviceOptions() {
 	def options = [:]
     def devices = getDevices()
     devices.each { device ->
-    	options[device.mac] = device.room_name
+    	options[device.device_id] = device.room_name
     }
     log.debug("Options: ${options}")
     return options
@@ -53,8 +60,8 @@ def getDevices() {
    		uri: "https://rest.ambiclimate.com",
        	path: "/UserCredential",
         query: [
-   	    	email: appSettings.email,
-       	    pwd: appSettings.password
+   	    	email: email,
+       	    pwd: password
         ]
    	]
     
@@ -124,7 +131,7 @@ def updateDevices() {
 	settings.selectedDevices.each { device ->
     	selectors.add("${device}")
         def stDevice = getChildDevice(device)
-        def ambi = state.devices.find { it.mac == device };
+        def ambi = state.devices.find { it.device_id == device };
         log.debug(ambi)
         if (!stDevice) {
         	log.debug("New device to be created: ${device}")

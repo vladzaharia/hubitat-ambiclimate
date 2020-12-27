@@ -14,13 +14,13 @@
  *
  */
 metadata {
-	definition (name: "Ambi Climate", namespace: "alisdairjsmyth", author: "Alisdair Smyth") {
+	definition (name: "Ambi Climate", namespace: "vladzaharia", author: "Vlad Zaharia") {
 		capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
         capability "Switch"
         
-        command off
-        command on
+        command "off"
+        command "on"
 	}
 
 
